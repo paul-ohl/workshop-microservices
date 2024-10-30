@@ -33,6 +33,18 @@ services:
     depends_on:
       - postgres
 
+  kennel:
+    build:
+      context: .
+      dockerfile: ./kennel/Dockerfile
+      environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      ports:
+      - "3004:3004"
+
   adminer:
     image: adminer
     restart: always
