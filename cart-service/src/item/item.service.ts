@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ItemService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   getItem(itemWhereUniqueInput: Prisma.ItemWhereUniqueInput) {
     return this.prisma.item.findUnique({

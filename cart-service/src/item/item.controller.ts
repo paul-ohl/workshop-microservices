@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -6,10 +14,13 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('items')
 @Controller()
 export class ItemController {
-  constructor(private itemService: ItemService) { }
+  constructor(private itemService: ItemService) {}
 
   @Get('/cart/:cartId/items')
-  @ApiResponse({ status: 200, description: 'Retrieved all the items from the cart.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieved all the items from the cart.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   getItems(@Param('cartId') cartId: number): Promise<ItemModel[]> {

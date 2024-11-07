@@ -9,6 +9,5 @@ export class AppService {
     return 'Ok from cart service';
   }
 
-  async getCart() {
-  }
+  async getCart() {}
 }

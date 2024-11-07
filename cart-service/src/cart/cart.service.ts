@@ -4,13 +4,15 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class CartService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
   }
 
-  getCart(cartWhereUniqueInput: Prisma.CartWhereUniqueInput): Promise<Cart | null> {
+  getCart(
+    cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
+  ): Promise<Cart | null> {
     return this.prisma.cart.findUnique({
       where: cartWhereUniqueInput,
     });
