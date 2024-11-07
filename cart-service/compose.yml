@@ -17,10 +17,9 @@ services:
       context: .
       dockerfile: ./docker/postgres/Dockerfile
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongodb
-      - MONGO_INITDB_ROOT_PASSWORD=mongodb
+      - POSTGRES_PASSWORD=postgres
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
       - data:/data/db
 
