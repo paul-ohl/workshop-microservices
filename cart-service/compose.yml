@@ -1,0 +1,28 @@
+services:
+  # cart:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/node/Dockerfile
+  #   environment:
+  #     - MONGO_DATABASE=${MONGO_DATABASE}
+  #     - MONGO_PASSWORD=${MONGO_PASSWORD}
+  #     - MONGO_USERNAME=${MONGO_USERNAME}
+  #   ports:
+  #     - "4000:4000"
+  #   volumes:
+  #     - .:/app
+
+  cart-db:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/data/db
+
+volumes:
+  data:
+    driver: local
