@@ -5,8 +5,8 @@ import { PrismaClient } from '@prisma/client';
 export class AppService {
   private prisma: PrismaClient;
 
-  getHello(): string {
-    return 'Hello World!';
+  getHealth(): string {
+    return 'Ok from cart service';
   }
 
   async getCart() {

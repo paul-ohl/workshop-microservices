@@ -2,39 +2,39 @@ import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { Cart as CartModel } from '@prisma/client';
 
-@Controller('cart')
+@Controller()
 export class CartController {
   constructor(private cartService: CartService) { }
 
-  @Get('/')
+  @Get('carts')
   async getCarts(): Promise<CartModel[]> {
     return this.cartService.getAllCarts();
   }
 
-  @Get('/:id')
+  @Get('cart/:id')
   async getCart(@Param('id') id: number): Promise<CartModel> {
     return this.cartService.getCart({ id: id });
   }
 
-  @Get('/user/:userId')
+  @Get('carts/user/:userId')
   async getCartsByUserId(@Param('userId') userId: string): Promise<CartModel[]> {
     return this.cartService.getCartsByUserId(userId);
   }
 
-  @Post('')
+  @Post('cart')
   async createCart(): Promise<CartModel> {
     return this.cartService.createCart({
       creatorId: '1',
     });
   }
 
-  @Delete('/:id')
+  @Delete('cart/:id')
   async deleteCart(@Param('id') id: number): Promise<CartModel> {
     return this.cartService.deleteCart({ id: id });
   }
 
-  @Get('/:id/sell')
-  async sellCart(@Param('id') id: number) {
+  @Get('cart/:id/sell')
+  async sellCart(@Param('id') _id: number) {
     // TODO
   }
 }

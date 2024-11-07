@@ -2,11 +2,11 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
 
-@Controller('item')
+@Controller()
 export class ItemController {
   constructor(private itemService: ItemService) { }
 
-  @Get('/cart/:cartId/item')
+  @Get('/cart/:cartId/items')
   getItems(@Param('cartId') cartId: number): Promise<ItemModel[]> {
     return this.itemService.getItemsFromCart({ id: cartId });
   }
