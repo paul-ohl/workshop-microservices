@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('items')
+@ApiBearerAuth()
 @Controller()
 export class ItemController {
   constructor(private itemService: ItemService) {}
@@ -21,7 +22,7 @@ export class ItemController {
     status: 200,
     description: 'Retrieved all the items from the cart.',
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   getItems(@Param('cartId') cartId: number): Promise<ItemModel[]> {
     return this.itemService.getItemsFromCart({ id: cartId });
@@ -30,7 +31,7 @@ export class ItemController {
   @Post('/cart/:cartId/item')
   @ApiResponse({ status: 201, description: 'Created the resource.' })
   @ApiResponse({ status: 400, description: 'Bad input.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   createItem(
     @Param('cartId') cartId: number,
@@ -56,7 +57,7 @@ export class ItemController {
   @Put('/cart/:cartId/item/:itemId')
   @ApiResponse({ status: 201, description: 'Updated the resource.' })
   @ApiResponse({ status: 400, description: 'Bad input.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   updateItem(
     @Param('itemId') itemId: number,
@@ -73,7 +74,7 @@ export class ItemController {
 
   @Delete('/cart/:cartId/item/:itemId')
   @ApiResponse({ status: 201, description: 'Deleted the resource.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   deleteItem(@Param('itemId') itemId: number): Promise<ItemModel> {
     return this.itemService.deleteItem({ id: itemId });
