@@ -5,6 +5,7 @@ WORKDIR /kennel
 COPY ./kennel/package*.json ./
  
 RUN npm install
+RUN npx prisma generate
  
 COPY ./kennel .
  
