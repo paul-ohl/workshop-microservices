@@ -1,0 +1,18 @@
+{
+  "id": 0,
+  "ownerId": "asenrtiu",
+  "items": [
+    {
+      "id": 0,
+      "name": "truc",
+      "price": 12.00,
+      "quantity": 1
+    },
+    {
+      "id": 1,
+      "name": "autre truc",
+      "price": 13.01,
+      "quantity": 3
+    }
+  ]
+}
