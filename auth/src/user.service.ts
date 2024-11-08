@@ -39,7 +39,7 @@ export class UserService {
       process.env.JWT_KEY,
       { expiresIn: '10h' },
     );
-    return { token };
+    return { token, id: user.id };
   }
 
   async deleteUser(userId: number) {

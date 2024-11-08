@@ -43,8 +43,10 @@ export class UserController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      const { token } = await this.userService.loginUser(email, password);
-      res.status(HttpStatus.OK).json({ message: 'Connexion réussie', token });
+      const { token, id } = await this.userService.loginUser(email, password);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: 'Connexion réussie', token, id });
     } catch (error) {
       res
         .status(error.status || HttpStatus.INTERNAL_SERVER_ERROR)
