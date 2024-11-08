@@ -1,8 +1,44 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+enum Jour {
+  LUNDI
+  MARDI
+  MERCREDI
+  JEUDI
+  VENDREDI
+  SAMEDI
+  DIMANCHE
+}
+
+model TimeSlot {
+  id              String        @id @default(uuid())
+  startTime       DateTime
+  endTime         DateTime
+  disponibilityId String
+  Disponibility   Disponibility @relation(fields: [disponibilityId], references: [id])
+  isDisponible    Boolean
+}
+
+model Disponibility {
+  id       String     @id @default(uuid())
+  jour     Jour[]
+  vetId    String
+  vet      Vet        @relation(fields: [vetId], references: [id])
+  timeSlot TimeSlot[]
+}
+
+model Vet {
+  id            String          @id @default(uuid())
+  name          String
+  price         Int
+  categoryIds   String[]
+  disponibility Disponibility[]
 }

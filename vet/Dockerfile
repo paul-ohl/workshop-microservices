@@ -2,14 +2,16 @@ FROM node:alpine
 
 WORKDIR /vet
 
-COPY ./vet/package.json ./
+COPY ./vet/package*.json ./
 
 RUN npm install
 
-EXPOSE 4000
- 
 COPY ./vet .
 
+RUN npx prisma generate
+
 RUN npm run build
+
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
