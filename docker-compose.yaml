@@ -1,0 +1,39 @@
+version: '3.8'
+networks:
+  microservices_network:
+    driver: bridge
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - '3000:3000'
+    depends_on:
+      - micro-service
+    networks:
+      - microservices_network
+
+  micro-service:
+    build:
+      context: ./micro-service
+    ports:
+      - '3001:3001'
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/Animals
+    depends_on:
+      - mongo
+    networks:
+      - microservices_network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - microservices_network
+
+volumes:
+  mongo_data:
