@@ -54,7 +54,7 @@ export class UserController {
 
   @Delete(':user_id')
   async userDelete(
-    @Param('user_id') userId: string,
+    @Param('user_id') userId: number,
     @Res() res: Response,
   ): Promise<void> {
     try {
@@ -69,7 +69,7 @@ export class UserController {
 
   @Put(':user_id')
   async userPut(
-    @Param('user_id') userId: string,
+    @Param('user_id') userId: number,
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('role') role: string,

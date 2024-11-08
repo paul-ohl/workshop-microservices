@@ -8,26 +8,19 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async registerUser(email: string, password: string, role: string) {
-    console.log('Débogage - Données reçues pour enregistrement:', { email, role });
-
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
-      console.log('Débogage - Mot de passe haché:', hashedPassword);
-
       const user = await this.prisma.user.create({
         data: { email, password: hashedPassword, role },
       });
-      console.log('Débogage - Utilisateur créé avec succès:', user);
       return `Utilisateur créé: ${user.email}`;
     } catch (error) {
-      console.error('Débogage - Erreur lors de la création de l’utilisateur:', error);
-
-      if (error.code === 'P2002') { // P2002 : Contrainte unique violée
+      if (error.code === 'P2002') {
+        // P2002 : Contrainte unique violée
         throw new HttpException('Email déjà utilisé', HttpStatus.CONFLICT);
       }
-
       throw new HttpException(
-        `Erreur lors de la création de l’utilisateur: ${error.message || 'Erreur inconnue'}`,
+        'Erreur lors de la création de l’utilisateur',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -49,7 +42,7 @@ export class UserService {
     return { token };
   }
 
-  async deleteUser(userId: string) {
+  async deleteUser(userId: number) {
     try {
       await this.prisma.user.delete({ where: { id: userId } });
       return 'Utilisateur supprimé';
@@ -62,7 +55,7 @@ export class UserService {
   }
 
   async updateUser(
-    userId: string,
+    userId: number,
     email?: string,
     password?: string,
     role?: string,
