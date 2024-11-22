@@ -1,28 +1,33 @@
 services:
-  # cart:
-  #   build:
-  #     context: .
-  #     dockerfile: ./docker/node/Dockerfile
-  #   environment:
-  #     - MONGO_DATABASE=${MONGO_DATABASE}
-  #     - MONGO_PASSWORD=${MONGO_PASSWORD}
-  #     - MONGO_USERNAME=${MONGO_USERNAME}
-  #   ports:
-  #     - "4000:4000"
-  #   volumes:
-  #     - .:/app
-
-  cart-db:
+  cart:
     build:
       context: .
-      dockerfile: ./docker/postgres/Dockerfile
+      dockerfile: ./docker/node/Dockerfile
     environment:
-      - POSTGRES_PASSWORD=postgres
+      - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}/${DATABASE_NAME}?schema=public
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.16-alpine
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
     ports:
       - "5432:5432"
     volumes:
-      - data:/data/db
+      - postgres_data:/data/db
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
 volumes:
-  data:
+  postgres_data:
     driver: local

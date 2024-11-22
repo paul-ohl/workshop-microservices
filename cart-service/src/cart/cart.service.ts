@@ -10,7 +10,7 @@ export class CartService {
   constructor(
     private prisma: PrismaService,
     private readonly itemService: ItemService,
-  ) { }
+  ) {}
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
