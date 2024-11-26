@@ -1,37 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { Kennel, Prisma } from '@prisma/client';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class KennelService {
   constructor(private prisma: PrismaService) {}
 
-  async all() {
+  async findAll() {
     return this.prisma.kennel.findMany();
   }
 
-  async kennel(
+  async findKennelById(
     kennelWhereUniqueInput: Prisma.KennelWhereUniqueInput,
   ): Promise<Kennel | null> {
     return this.prisma.kennel.findUnique({
       where: kennelWhereUniqueInput,
-    });
-  }
-
-  async kennels(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.KennelWhereUniqueInput;
-    where?: Prisma.KennelWhereInput;
-    orderBy?: Prisma.KennelOrderByWithRelationInput;
-  }): Promise<Kennel[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.kennel.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
     });
   }
 
