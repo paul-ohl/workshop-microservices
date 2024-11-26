@@ -19,10 +19,16 @@ import { AuthGuard } from '../auth/auth.guard';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Get()
+  @UseGuards(AuthGuard)
+  async getAllProducts() {
+    return this.productService.findAll();
+  }
+
   @Get('/:id')
   @UseGuards(AuthGuard)
   async getProductById(@Param('id') id: string): Promise<ProductModel> {
-    return this.productService.product({ id: id });
+    return this.productService.findProductById(id);
   }
 
   @Post()
@@ -38,11 +44,11 @@ export class ProductController {
   @UseGuards(AuthGuard)
   async updateProduct(
     @Param('id') id: string,
-    @Body('productData') productData,
+    @Body('productData') productData: any,
   ): Promise<ProductModel> {
     const { name, price, stock } = productData;
     return this.productService.updateProduct({
-      where: { id: id },
+      id,
       data: { name, price, stock },
     });
   }
@@ -50,6 +56,6 @@ export class ProductController {
   @Delete('delete/:id')
   @UseGuards(AuthGuard)
   async deleteProduct(@Param('id') id: string): Promise<ProductModel> {
-    return this.productService.deleteProduct({ id: id });
+    return this.productService.deleteProduct(id);
   }
 }

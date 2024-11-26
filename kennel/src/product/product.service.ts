@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product, Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 
@@ -6,29 +6,19 @@ import { PrismaService } from 'prisma/prisma.service';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  async product(
-    productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
-  ): Promise<Product | null> {
-    return this.prisma.product.findUnique({
-      where: productWhereUniqueInput,
-    });
+  async findAll() {
+    return this.prisma.product.findMany();
   }
 
-  async products(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ProductWhereUniqueInput;
-    where?: Prisma.ProductWhereInput;
-    orderBy?: Prisma.ProductOrderByWithRelationInput;
-  }): Promise<Product[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.product.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+  async findProductById(id: string): Promise<Product | null> {
+    const product = this.prisma.product.delete({
+      where: { id },
     });
+
+    if (!product)
+      throw new NotFoundException(`Product with id ${id} not found`);
+
+    return product;
   }
 
   async createProduct(data: Prisma.ProductCreateInput): Promise<Product> {
@@ -38,19 +28,29 @@ export class ProductService {
   }
 
   async updateProduct(params: {
-    where: Prisma.ProductWhereUniqueInput;
+    id: string;
     data: Prisma.ProductUpdateInput;
   }): Promise<Product> {
-    const { where, data } = params;
-    return this.prisma.product.update({
+    const { id, data } = params;
+    const product = this.prisma.product.update({
+      where: { id },
       data,
-      where,
     });
+
+    if (!product)
+      throw new NotFoundException(`Product with id ${id} not found`);
+
+    return product;
   }
 
-  async deleteProduct(where: Prisma.ProductWhereUniqueInput): Promise<Product> {
-    return this.prisma.product.delete({
-      where,
+  async deleteProduct(id: string): Promise<Product> {
+    const product = this.prisma.product.delete({
+      where: { id },
     });
+
+    if (!product)
+      throw new NotFoundException(`Product with id ${id} not found`);
+
+    return product;
   }
 }

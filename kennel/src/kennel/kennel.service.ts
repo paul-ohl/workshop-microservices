@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Kennel, Prisma } from '@prisma/client';
 import { PrismaService } from 'prisma/prisma.service';
 
@@ -10,12 +10,14 @@ export class KennelService {
     return this.prisma.kennel.findMany();
   }
 
-  async findKennelById(
-    kennelWhereUniqueInput: Prisma.KennelWhereUniqueInput,
-  ): Promise<Kennel | null> {
-    return this.prisma.kennel.findUnique({
-      where: kennelWhereUniqueInput,
+  async findKennelById(id: string): Promise<Kennel | null> {
+    const kennel = this.prisma.kennel.findUnique({
+      where: { id },
     });
+
+    if (!kennel) throw new NotFoundException(`Kennel with id ${id} not found`);
+
+    return kennel;
   }
 
   async createKennel(data: Prisma.KennelCreateInput): Promise<Kennel> {
@@ -25,52 +27,60 @@ export class KennelService {
   }
 
   async updateKennel(params: {
-    where: Prisma.KennelWhereUniqueInput;
+    id: string;
     data: Prisma.KennelUpdateInput;
   }): Promise<Kennel> {
-    const { where, data } = params;
-    return this.prisma.kennel.update({
+    const { id, data } = params;
+    const kennel = this.prisma.kennel.update({
+      where: { id },
       data,
-      where,
     });
+
+    if (!kennel) throw new NotFoundException(`Kennel with id ${id} not found`);
+
+    return kennel;
   }
 
-  async deleteKennel(where: Prisma.KennelWhereUniqueInput): Promise<Kennel> {
-    return this.prisma.kennel.delete({
-      where,
+  async deleteKennel(id: string): Promise<Kennel> {
+    const kennel = this.prisma.kennel.delete({
+      where: { id },
     });
+
+    if (!kennel) throw new NotFoundException(`Kennel with id ${id} not found`);
+
+    return kennel;
   }
 
   async addProduct(params: {
-    where: Prisma.KennelWhereUniqueInput;
+    id: string;
     data: Prisma.KennelUpdateInput;
   }): Promise<Kennel> {
-    const { where, data } = params;
+    const { id, data } = params;
     return this.prisma.kennel.update({
+      where: { id },
       data,
-      where,
     });
   }
 
   async addVet(params: {
-    where: Prisma.KennelWhereUniqueInput;
+    id: string;
     data: Prisma.KennelUpdateInput;
   }): Promise<Kennel> {
-    const { where, data } = params;
+    const { id, data } = params;
     return this.prisma.kennel.update({
+      where: { id },
       data,
-      where,
     });
   }
 
   async addAnimal(params: {
-    where: Prisma.KennelWhereUniqueInput;
+    id: string;
     data: Prisma.KennelUpdateInput;
   }): Promise<Kennel> {
-    const { where, data } = params;
+    const { id, data } = params;
     return this.prisma.kennel.update({
+      where: { id },
       data,
-      where,
     });
   }
 }
