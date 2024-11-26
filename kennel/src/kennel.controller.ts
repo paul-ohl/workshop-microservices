@@ -4,7 +4,6 @@ import {
   Param,
   Post,
   Body,
-  Put,
   Delete,
   Patch,
 } from '@nestjs/common';
@@ -14,6 +13,11 @@ import { Kennel as KennelModel } from '@prisma/client';
 @Controller('/kennel')
 export class KennelController {
   constructor(private readonly kennelService: KennelService) {}
+
+  @Get()
+  async getAlleKennels() {
+    return this.kennelService.all();
+  }
 
   @Get('/:id')
   async getKennelById(@Param('id') id: string): Promise<KennelModel> {
@@ -45,7 +49,7 @@ export class KennelController {
     return this.kennelService.deleteKennel({ id: id });
   }
 
-  @Put('addProduct/:id')
+  @Patch('addProduct/:id')
   async addProduct(
     @Param('id') id: string,
     @Body('kennelData') kennelData,
@@ -57,7 +61,7 @@ export class KennelController {
     });
   }
 
-  @Put('addVet/:id')
+  @Patch('addVet/:id')
   async addVet(
     @Param('id') id: string,
     @Body('kennelData') kennelData,
@@ -69,7 +73,7 @@ export class KennelController {
     });
   }
 
-  @Put('addAnimal/:id')
+  @Patch('addAnimal/:id')
   async addAnimal(
     @Param('id') id: string,
     @Body('kennelData') kennelData,

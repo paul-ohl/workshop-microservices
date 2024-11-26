@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Kennel, Prisma } from '@prisma/client';
 
 @Injectable()
 export class KennelService {
   constructor(private prisma: PrismaService) {}
+
+  async all() {
+    return this.prisma.kennel.findMany();
+  }
 
   async kennel(
     kennelWhereUniqueInput: Prisma.KennelWhereUniqueInput,

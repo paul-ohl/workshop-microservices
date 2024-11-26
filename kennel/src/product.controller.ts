@@ -4,14 +4,14 @@ import {
   Param,
   Post,
   Body,
-  Put,
+  Patch,
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product as ProductModel } from '@prisma/client';
 
 @Controller('/product')
-export class AppController {
+export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('/:id')
@@ -27,7 +27,7 @@ export class AppController {
     return this.productService.createProduct(productData);
   }
 
-  @Put('updateProduct/:id')
+  @Patch('updateProduct/:id')
   async updateProduct(
     @Param('id') id: string,
     @Body('productData') productData,
