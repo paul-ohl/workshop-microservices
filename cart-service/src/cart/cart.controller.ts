@@ -88,7 +88,7 @@ export class CartController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   @UseGuards(AuthGuard)
-  async sellCart(@Param('id') _id: number) {
-    // TODO
+  async sellCart(@Param('id') id: number) {
+    return this.cartService.sellCart(id);
   }
 }

@@ -4,24 +4,50 @@ services:
       context: .
       dockerfile: ./vet/Dockerfile
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
     ports:
       - "3000:3000"
     volumes:
       - ./vet:/vet
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    ports:
-      - "5432:5432"
+  payment:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
+      - JWT_SECRET=${JWT_SECRET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - PORT=3002
+    ports:
+      - "3002:3002"
+
+  cart:
+    build:
+      context: ./cart-service
+      dockerfile: docker/node/Dockerfile
+    environment:
+      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PORT=3003
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  postgres:
+    image: postgres:13.16-alpine
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_NAME}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/data/db
 
 volumes:
-  postgres-data:
+  postgres_data:
     driver: local
