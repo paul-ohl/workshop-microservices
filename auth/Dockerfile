@@ -1,23 +1,30 @@
-# Utilise une version alpine de Node pour réduire la taille de l'image
-FROM node:alpine
+FROM node:22.11.0-slim AS base
 
-# Crée le répertoire de travail dans le conteneur
-WORKDIR /app/auth
+WORKDIR /app
 
-# Copie uniquement les fichiers nécessaires pour installer les dépendances
-COPY package*.json .
+COPY ./package*.json ./
 
-# Installe les dépendances
 RUN npm install
 
-# Copie tous les fichiers du projet dans le conteneur
-COPY . .
+COPY ./ .
 
+RUN npx prisma generate
 
 RUN npm run build
 
-# Expose le port de l'application
-EXPOSE 3000
+# Install additional tools: OpenSSL, PostgreSQL client, etc.
+RUN apt-get update && apt-get install -y \
+    bash \
+    locales \
+    openssl \
+    libssl-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-# Démarre l'application
-CMD ["npm", "run", "dev"]
+# Add and set up the entrypoint script
+COPY entrypoint.sh /vet/entrypoint.sh
+RUN chmod +x /vet/entrypoint.sh
+
+EXPOSE 3004
+
+CMD [ "/vet/entrypoint.sh" ]

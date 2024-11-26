@@ -11,7 +11,7 @@ export class UserService {
   private privateKey: string;
 
   constructor(private prisma: PrismaService) {
-     this.privateKey = process.env.JWT_KEY as string;
+    this.privateKey = process.env.JWT_SECRET as string;
   }
 
   async registerUser(email: string, password: string, role: string) {

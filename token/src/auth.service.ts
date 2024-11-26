@@ -18,7 +18,7 @@ export class AuthService {
 
   constructor() {
     // Charger la clé publique directement depuis l'environnement
-    this.publicKey = process.env.JWT_KEY as string;
+    this.publicKey = process.env.JWT_SECRET as string;
   }
 
   async verifyTokenService(req: Request): Promise<AuthResult> {
@@ -26,17 +26,17 @@ export class AuthService {
       if (req.headers && req.headers['authorization']) {
         const token = req.headers['authorization'];
 
-      const payload = await new Promise<JwtPayload | string>(
-        (resolve, reject) => {
-          jwt.verify(token, this.publicKey, (error, decoded) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(decoded as JwtPayload | string);
-            }
-          });
-        },
-      );
+        const payload = await new Promise<JwtPayload | string>(
+          (resolve, reject) => {
+            jwt.verify(token, this.publicKey, (error, decoded) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(decoded as JwtPayload | string);
+              }
+            });
+          },
+        );
 
         return { status: 200, user: payload, message: 'Accès autorisé' };
       } else {
@@ -48,24 +48,22 @@ export class AuthService {
     }
   }
 
-
-
   async verifyUserTokenService(req: Request): Promise<AuthResult> {
     try {
       if (req.headers && req.headers['authorization']) {
         const token = req.headers['authorization'];
 
-      const payload = await new Promise<JwtPayload | string>(
-        (resolve, reject) => {
-          jwt.verify(token, this.publicKey, (error, decoded) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(decoded as JwtPayload | string);
-            }
-          });
-        },
-      );
+        const payload = await new Promise<JwtPayload | string>(
+          (resolve, reject) => {
+            jwt.verify(token, this.publicKey, (error, decoded) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(decoded as JwtPayload | string);
+              }
+            });
+          },
+        );
 
         if (
           typeof payload === 'object' &&

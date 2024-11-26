@@ -39,6 +39,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
       - PORT=3004
     ports:
       - "3004:3004"

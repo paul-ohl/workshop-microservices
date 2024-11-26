@@ -8,7 +8,6 @@ async function bootstrap() {
   // Initialiser Prisma pour PostgreSQL
   const prisma = new PrismaClient();
 
-
   await app.listen(3000);
 }
 bootstrap();
