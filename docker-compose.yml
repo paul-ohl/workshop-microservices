@@ -1,14 +1,14 @@
 services:
   vet:
     build:
-      context: .
-      dockerfile: ./vet/Dockerfile
+      context: ./vet
+      dockerfile: ./Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
     ports:
       - "3000:3000"
-    volumes:
-      - ./vet:/vet
+    depends_on:
+      - postgres
 
   payment:
     build:

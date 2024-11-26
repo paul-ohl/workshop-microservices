@@ -1,17 +1,32 @@
-FROM node:alpine
+FROM node:22.11.0-slim AS base
 
 WORKDIR /vet
 
-COPY ./vet/package*.json ./
+COPY ./package*.json ./
 
 RUN npm install
 
-COPY ./vet .
+COPY ./ .
+
+FROM base AS build
 
 RUN npx prisma generate
 
 RUN npm run build
 
+# Install additional tools: OpenSSL, PostgreSQL client, etc.
+RUN apt-get update && apt-get install -y \
+    bash \
+    locales \
+    openssl \
+    libssl-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add and set up the entrypoint script
+COPY entrypoint.sh /vet/entrypoint.sh
+RUN chmod +x /vet/entrypoint.sh
+
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD [ "/vet/entrypoint.sh" ]
