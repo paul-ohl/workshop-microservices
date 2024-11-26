@@ -2,10 +2,17 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  private privateKey: string;
+
+  constructor(private prisma: PrismaService) {
+     this.privateKey = process.env.JWT_KEY as string;
+  }
 
   async registerUser(email: string, password: string, role: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,7 +23,6 @@ export class UserService {
       return `Utilisateur créé: ${user.email}`;
     } catch (error) {
       if (error.code === 'P2002') {
-        // P2002 : Contrainte unique violée
         throw new HttpException('Email déjà utilisé', HttpStatus.CONFLICT);
       }
       throw new HttpException(
@@ -27,6 +33,7 @@ export class UserService {
   }
 
   async loginUser(email: string, password: string) {
+    // Recherche de l'utilisateur par email
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new HttpException(
@@ -34,11 +41,16 @@ export class UserService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+
+    // Signature du token avec la clé privée RSA et l'algorithme RS256
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_KEY,
-      { expiresIn: '10h' },
+      this.privateKey,
+      {
+        expiresIn: process.env.JWT_EXPIRATION,
+      },
     );
+
     return { token, id: user.id };
   }
 

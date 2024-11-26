@@ -2,10 +2,11 @@
 FROM node:alpine
 
 # Crée le répertoire de travail dans le conteneur
-WORKDIR /app/auth
+WORKDIR /app/token
 
 # Copie uniquement les fichiers nécessaires pour installer les dépendances
 COPY package*.json .
+
 
 # Installe les dépendances
 RUN npm install
@@ -17,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Expose le port de l'application
-EXPOSE 3000
+EXPOSE 3001
 
 # Démarre l'application
 CMD ["npm", "run", "dev"]

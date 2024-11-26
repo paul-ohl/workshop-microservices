@@ -33,11 +33,28 @@ services:
     depends_on:
       - postgres
 
-  adminer:
-    image: adminer
-    restart: always
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PORT=3004
     ports:
-      - 8080:8080
+      - "3004:3004"
+    depends_on:
+      - postgres
+    restart: always
+
+  token:
+    build:
+      context: ./token
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3005
+    ports:
+      - "3005:3005"
+    restart: always
 
   postgres:
     image: postgres:13.16-alpine
@@ -47,6 +64,13 @@ services:
       - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
 volumes:
   postgres_data:
