@@ -6,7 +6,7 @@ COPY ./kennel/package*.json ./
 
 RUN npm install
 
-COPY ./kennel .
+COPY ./ .
 
 RUN npx prisma generate \
 	&& npm run build
