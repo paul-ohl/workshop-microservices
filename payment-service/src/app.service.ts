@@ -4,7 +4,7 @@ import { StripeService } from './stripe/stripe.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly stripeService: StripeService) {}
+  constructor(private readonly stripeService: StripeService) { }
   getHello(): string {
     return 'OK from Payment microservice';
   }

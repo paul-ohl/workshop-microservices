@@ -12,12 +12,13 @@ import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateItemDto } from 'src/types/createItemDto';
 
 @ApiTags('items')
 @ApiBearerAuth()
 @Controller()
 export class ItemController {
-  constructor(private itemService: ItemService) {}
+  constructor(private itemService: ItemService) { }
 
   @Get('/cart/:cartId/items')
   @ApiResponse({
@@ -28,7 +29,7 @@ export class ItemController {
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   @UseGuards(AuthGuard)
   getItems(@Param('cartId') cartId: number): Promise<ItemModel[]> {
-    return this.itemService.getItemsFromCart({ id: cartId });
+    return this.itemService.getItemsFromCart({ id: +cartId });
   }
 
   @Post('/cart/:cartId/item')
@@ -39,7 +40,7 @@ export class ItemController {
   @UseGuards(AuthGuard)
   createItem(
     @Param('cartId') cartId: number,
-    @Body() itemData: { itemId: number; price: number; quantity?: number },
+    @Body() itemData: CreateItemDto,
   ): Promise<ItemModel> {
     if (!itemData.price) {
       throw new Error('Price is required');
@@ -50,7 +51,7 @@ export class ItemController {
     return this.itemService.createItem({
       Cart: {
         connect: {
-          id: cartId,
+          id: +cartId,
         },
       },
       price: itemData.price,

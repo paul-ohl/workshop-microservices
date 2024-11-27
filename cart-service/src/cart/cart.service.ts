@@ -10,7 +10,7 @@ export class CartService {
   constructor(
     private prisma: PrismaService,
     private readonly itemService: ItemService,
-  ) {}
+  ) { }
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
@@ -59,12 +59,12 @@ export class CartService {
     });
   }
 
-  async sellCart(cartId: number): Promise<String> {
-    const cartItems = await this.itemService.getItemsFromCart({ id: cartId });
+  async sellCart(cartId: number, authorizationHeader: string): Promise<String> {
+    const cartItems = await this.itemService.getItemsFromCart({ id: +cartId });
     const cartItemsWithNames: PayItem[] = await Promise.all(
       cartItems.map(async (item) => {
         return {
-          id: item.id,
+          id: +item.id,
           name: 'name' + item.id, // get item name from kennel API
           price: item.price,
           quantity: item.quantity,
@@ -78,6 +78,13 @@ export class CartService {
       ownerId: cartInfo.creatorId,
       items: cartItemsWithNames,
     };
-    return 'Cart sold!';
+
+    let res = await fetch('http://localhost:3002/pay-cart', {
+      method: 'POST',
+      body: JSON.stringify(finalCart),
+      headers: { 'Content-Type': 'application/json', 'Authorization': authorizationHeader },
+    })
+
+    return await res.json();
   }
 }
