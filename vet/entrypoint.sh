@@ -5,7 +5,7 @@ sleep 10
 
 
 # Run Prisma migrations
-npx prisma migrate dev
+npx prisma migrate deploy
 
 # Push the database schema
 npx prisma db push

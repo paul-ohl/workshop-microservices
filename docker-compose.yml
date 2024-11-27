@@ -24,7 +24,7 @@ services:
   cart:
     build:
       context: ./cart-service
-      dockerfile: docker/node/Dockerfile
+      dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3003
@@ -64,6 +64,8 @@ services:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
       - POSTGRES_DB=${PG_NAME}
+    ports:
+      - 5432:5432
     volumes:
       - postgres_data:/data/db
       - postgres_data:/var/lib/postgresql/data
