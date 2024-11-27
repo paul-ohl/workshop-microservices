@@ -37,6 +37,16 @@ export class VetController {
     return this.vetService.findVet(id);
   }
 
+  @Get('/categories/:categories')
+  @UseGuards(AuthGuard)
+  @ApiResponse({ status: 200, description: 'Get vets by categories.' })
+  @ApiResponse({ status: 400, description: 'Wrong input.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 404, description: 'Resource does not exist.' })
+  async findVetByCategories(@Param('categories') categories: string) {
+    return this.vetService.findVetByCategories(categories.split(','));
+  }
+
   @Post()
   @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'Vet created.' })
