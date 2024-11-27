@@ -23,6 +23,18 @@ export class VetService {
     return vet;
   }
 
+  public async findVetByCategories(categories: string[]) {
+    const vets = await this.prisma.vet.findMany({
+      where: {
+        categoryIds: {
+          hasSome: categories,
+        },
+      },
+    });
+
+    return vets;
+  }
+
   public async updateVet(id: string, data: any) {
     const vet = await this.prisma.vet.update({
       where: { id },
