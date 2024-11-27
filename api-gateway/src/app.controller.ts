@@ -1,31 +1,36 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { ClientProxy, Transport, ClientProxyFactory } from '@nestjs/microservices';
+import { HttpService } from '@nestjs/axios';
 import { CreateAnimalDto } from './dto/create-animal.dto';
+import { firstValueFrom } from 'rxjs';
 
-@Controller('animals')
+@Controller('animal')
 export class AppController {
-  private client: ClientProxy;
+  private readonly animalServiceUrl = 'http://animal:3001'; 
 
-  constructor() {
-    // Création du client pour communiquer avec le microservice via TCP
-    this.client = ClientProxyFactory.create({
-      transport: Transport.TCP,
-      options: {
-        host: 'micro-service', 
-        port: 3001,            
-      },
-    });
-  }
+  constructor(private readonly httpService: HttpService) { }
 
   @Get()
   async getAnimals() {
-    // obtenir tous les animaux
-    return this.client.send({ cmd: 'get_animals' }, {});
+    try {
+      // Envoyer une requête GET au microservice animal
+      const response = await firstValueFrom(this.httpService.get(`${this.animalServiceUrl}/animals`));
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des animaux :', error.message);
+      throw error;
+    }
   }
 
   @Post()
   async createAnimal(@Body() createAnimalDto: CreateAnimalDto) {
-    // créer un nouvel animal
-    return this.client.send({ cmd: 'create_animal' }, createAnimalDto);
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(`${this.animalServiceUrl}/animal`, createAnimalDto),
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la création de l\'animal :', error.message);
+      throw error;
+    }
   }
 }

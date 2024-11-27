@@ -1,22 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 const logger = new Logger('Bootstrap');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Connecte l'API Gateway au microservice
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: '0.0.0.0',
-      port: 3001,  // Port du microservice
-    },
-  });
+  await app.listen(3000);
+  logger.log('API Gateway is running on http://localhost:3000');
 
-  await app.startAllMicroservices();
-  await app.listen(3000);  // Port de l'API Gateway
+  const httpService = app.get(HttpService); 
+  const animalServiceUrl = 'http://animal:3001'; 
+
+
 }
+
 bootstrap();
