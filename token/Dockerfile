@@ -18,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # Expose le port de l'application
-EXPOSE 3005
+EXPOSE 3000-3100
 
 # Démarre l'application
 CMD ["node", "dist/main.js"]
