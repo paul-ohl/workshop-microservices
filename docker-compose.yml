@@ -1,43 +1,47 @@
 services:
-  vet:
+  vet-service:
     build:
-      context: ./vet
+      context: ./vet-service
       dockerfile: ./Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - DATABASE_URL=${DATABASE_URL}
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - postgres
+    networks:
+      - microservices
 
-  payment:
-    build:
-      context: ./payment-service
-      dockerfile: Dockerfile
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - PORT=3002
-    ports:
-      - "3002:3002"
+  # payment:
+  #   build:
+  #     context: ./payment-service
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+  #     - PORT=3002
+  #   ports:
+  #     - "3002:3002"
 
-  cart:
-    build:
-      context: ./cart-service
-      dockerfile: docker/node/Dockerfile
-    environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
-      - PORT=3003
-    ports:
-      - "3003:3003"
-    depends_on:
-      - postgres
+  # cart:
+  #   build:
+  #     context: ./cart-service
+  #     dockerfile: docker/node/Dockerfile
+  #   environment:
+  #     - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+  #     - PORT=3003
+  #   ports:
+  #     - "3003:3003"
+  #   depends_on:
+  #     - postgres
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - microservices
 
   postgres:
     image: postgres:13.16-alpine
@@ -47,7 +51,11 @@ services:
       - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
-
+    networks:
+      - microservices
 volumes:
   postgres_data:
     driver: local
+networks:
+  microservices:
+    driver: bridge
