@@ -18,7 +18,7 @@ import { CreateItemDto } from 'src/types/createItemDto';
 @ApiBearerAuth()
 @Controller()
 export class ItemController {
-  constructor(private itemService: ItemService) { }
+  constructor(private itemService: ItemService) {}
 
   @Get('/cart/:cartId/items')
   @ApiResponse({

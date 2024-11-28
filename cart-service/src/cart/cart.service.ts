@@ -10,7 +10,7 @@ export class CartService {
   constructor(
     private prisma: PrismaService,
     private readonly itemService: ItemService,
-  ) { }
+  ) {}
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
@@ -50,7 +50,7 @@ export class CartService {
   }
 
   async deleteCart(where: Prisma.CartWhereUniqueInput): Promise<Cart> {
-    let cartItems = await this.itemService.getItemsFromCart(where);
+    const cartItems = await this.itemService.getItemsFromCart(where);
     cartItems.forEach(async (item) => {
       await this.itemService.deleteItem({ id: item.id });
     });
@@ -59,7 +59,7 @@ export class CartService {
     });
   }
 
-  async sellCart(cartId: number, authorizationHeader: string): Promise<String> {
+  async sellCart(cartId: number, authorizationHeader: string): Promise<string> {
     const cartItems = await this.itemService.getItemsFromCart({ id: +cartId });
     const cartItemsWithNames: PayItem[] = await Promise.all(
       cartItems.map(async (item) => {
@@ -79,11 +79,15 @@ export class CartService {
       items: cartItemsWithNames,
     };
 
-    let res = await fetch('http://localhost:3002/pay-cart', {
+    const address = 'http://' + process.env.PAYMENT_SERVICE_HOST + '/pay-cart';
+    const res = await fetch(address, {
       method: 'POST',
       body: JSON.stringify(finalCart),
-      headers: { 'Content-Type': 'application/json', 'Authorization': authorizationHeader },
-    })
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authorizationHeader,
+      },
+    });
 
     return await res.json();
   }

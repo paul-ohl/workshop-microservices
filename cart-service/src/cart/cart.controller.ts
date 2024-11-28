@@ -16,7 +16,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @ApiBearerAuth()
 @Controller()
 export class CartController {
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService) {}
 
   @Get('carts')
   @ApiResponse({ status: 200, description: 'Retrieved all the carts.' })

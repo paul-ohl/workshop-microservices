@@ -28,6 +28,9 @@ services:
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3003
+      - PAYMENT_SERVICE_HOST=payment:3002
+      - THANK_YOU_URL=${THANK_YOU_URL}
+      - CANCEL_URL=${CANCEL_URL}
     ports:
       - "3003:3003"
     depends_on:

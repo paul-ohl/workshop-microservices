@@ -27,10 +27,14 @@ export class AppService {
         payment_method_types: ['card'],
         line_items: lineItems,
         mode: 'payment',
-        success_url: 'http://localhost:3000/',
-        cancel_url: 'http://localhost:3000/',
+        success_url: process.env.THANK_YOU_URL,
+        cancel_url: process.env.CANCEL_URL,
       });
 
-    return session.url;
+    const returnJson = {
+      sessionId: session.id,
+      sessionUrl: session.url,
+    };
+    return JSON.stringify(returnJson);
   }
 }
