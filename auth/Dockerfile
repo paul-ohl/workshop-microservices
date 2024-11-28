@@ -25,6 +25,6 @@ RUN apt-get update && apt-get install -y \
 COPY entrypoint.sh /vet/entrypoint.sh
 RUN chmod +x /vet/entrypoint.sh
 
-EXPOSE 3004
+EXPOSE 3000-3100
 
 CMD [ "/vet/entrypoint.sh" ]

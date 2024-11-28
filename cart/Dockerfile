@@ -21,5 +21,6 @@ COPY --from=build /app/dist /app/dist
 RUN npx prisma generate
 COPY ./entrypoint.sh /app/entrypoint.sh
 
-EXPOSE 3003
+EXPOSE 3000-3100
+
 CMD [ "sh", "-c", "/app/entrypoint.sh" ]
