@@ -3,7 +3,17 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
+function checkEnvVars() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not defined');
+  }
+  if (!process.env.PORT) {
+    throw new Error('PORT is not defined');
+  }
+}
+
 async function bootstrap() {
+  checkEnvVars();
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
@@ -19,6 +29,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
 
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();

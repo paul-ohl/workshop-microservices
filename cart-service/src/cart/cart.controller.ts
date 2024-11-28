@@ -32,7 +32,7 @@ export class CartController {
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   @UseGuards(AuthGuard)
   async getCart(@Param('id') id: number): Promise<CartModel> {
-    return this.cartService.getCart({ id: id });
+    return this.cartService.getCart({ id: +id });
   }
 
   @Get('carts/user/:userId')
@@ -80,7 +80,7 @@ export class CartController {
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   @UseGuards(AuthGuard)
   async deleteCart(@Param('id') id: number): Promise<CartModel> {
-    return this.cartService.deleteCart({ id: id });
+    return this.cartService.deleteCart({ id: +id });
   }
 
   @Get('cart/:id/sell')
@@ -88,7 +88,7 @@ export class CartController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   @UseGuards(AuthGuard)
-  async sellCart(@Param('id') id: number) {
-    return this.cartService.sellCart(id);
+  async sellCart(@Param('id') id: number, @Request() req) {
+    return this.cartService.sellCart(+id, req.headers.authorization);
   }
 }
