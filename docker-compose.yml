@@ -1,14 +1,19 @@
 services:
-  vet:
+  vet-service:
     build:
-      context: ./vet
+      context: ./vet-service
       dockerfile: ./Dockerfile
     environment:
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PORT=3001
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - postgres
+    networks:
+      - microservices
 
   payment:
     build:
@@ -20,46 +25,30 @@ services:
       - PORT=3002
     ports:
       - "3002:3002"
+    networks:
+      - microservices
 
   cart:
     build:
       context: ./cart-service
-      dockerfile: Dockerfile
+      dockerfile: docker/node/Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3003
-      - PAYMENT_SERVICE_HOST=payment:3002
-      - THANK_YOU_URL=${THANK_YOU_URL}
-      - CANCEL_URL=${CANCEL_URL}
     ports:
       - "3003:3003"
     depends_on:
       - postgres
+    networks:
+      - microservices
 
-  auth:
-    build:
-      context: ./auth
-      dockerfile: Dockerfile
-    environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
-      - PORT=3004
-    ports:
-      - "3004:3004"
-    depends_on:
-      - postgres
+  adminer:
+    image: adminer
     restart: always
-
-  token:
-    build:
-      context: ./token
-      dockerfile: Dockerfile
-    environment:
-      - PORT=3005
     ports:
-      - "3005:3005"
-    restart: always
+      - 8080:8080
+    networks:
+      - microservices
 
   postgres:
     image: postgres:13.16-alpine
@@ -69,14 +58,12 @@ services:
       - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
-      - postgres_data:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    networks:
+      - microservices
 
 volumes:
   postgres_data:
     driver: local
+networks:
+  microservices:
+    driver: bridge
