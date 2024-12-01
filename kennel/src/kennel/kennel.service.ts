@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Kennel, Prisma } from '@prisma/client';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class KennelService {
@@ -31,24 +31,33 @@ export class KennelService {
     data: Prisma.KennelUpdateInput;
   }): Promise<Kennel> {
     const { id, data } = params;
-    const kennel = this.prisma.kennel.update({
+
+    const kennelExists = await this.prisma.kennel.findUnique({
+      where: { id },
+    });
+
+    if (!kennelExists) {
+      throw new NotFoundException(`Kennel with id ${id} not found`);
+    }
+
+    return this.prisma.kennel.update({
       where: { id },
       data,
     });
-
-    if (!kennel) throw new NotFoundException(`Kennel with id ${id} not found`);
-
-    return kennel;
   }
 
   async deleteKennel(id: string): Promise<Kennel> {
-    const kennel = this.prisma.kennel.delete({
+    const kennelExists = await this.prisma.kennel.findUnique({
       where: { id },
     });
 
-    if (!kennel) throw new NotFoundException(`Kennel with id ${id} not found`);
+    if (!kennelExists) {
+      throw new NotFoundException(`Kennel with id ${id} not found`);
+    }
 
-    return kennel;
+    return this.prisma.kennel.delete({
+      where: { id },
+    });
   }
 
   async addProduct(params: {
