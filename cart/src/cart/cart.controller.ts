@@ -73,7 +73,7 @@ export class CartController {
   @ApiResponse({ status: 200, description: 'Retrieved the cart.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  async sellCart(@Param('id') id: number, @Request() req) {
-    return this.cartService.sellCart(+id, req.headers.authorization);
+  async sellCart(@Param('id') id: number) {
+    return this.cartService.sellCart(+id);
   }
 }

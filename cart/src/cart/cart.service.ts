@@ -10,7 +10,7 @@ export class CartService {
   constructor(
     private prisma: PrismaService,
     private readonly itemService: ItemService,
-  ) { }
+  ) {}
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
@@ -59,7 +59,7 @@ export class CartService {
     });
   }
 
-  async sellCart(cartId: number, authorizationHeader: string): Promise<string> {
+  async sellCart(cartId: number): Promise<string> {
     const cartItems = await this.itemService.getItemsFromCart({ id: +cartId });
     const cartItemsWithNames: PayItem[] = await Promise.all(
       cartItems.map(async (item) => {
@@ -85,7 +85,6 @@ export class CartService {
       body: JSON.stringify(finalCart),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: authorizationHeader,
       },
     });
 

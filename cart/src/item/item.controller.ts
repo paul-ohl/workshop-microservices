@@ -41,7 +41,7 @@ export class ItemController {
     if (!itemData.price) {
       throw new Error('Price is required');
     }
-    if (itemData.quantity && itemData.quantity < 1) {
+    if (itemData.quantity !== undefined && itemData.quantity < 1) {
       throw new Error('Quantity must be greater than 0');
     }
     return this.itemService.createItem({
@@ -64,7 +64,7 @@ export class ItemController {
     @Param('itemId') itemId: number,
     @Body() itemData: { price?: number; quantity?: number },
   ): Promise<ItemModel> {
-    if (itemData.quantity && itemData.quantity < 1) {
+    if (itemData.quantity != undefined && itemData.quantity < 1) {
       return this.deleteItem(itemId);
     }
     return this.itemService.updateItem({
