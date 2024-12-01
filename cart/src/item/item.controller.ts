@@ -10,7 +10,7 @@ import {
 import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateItemDto } from 'src/types/createItemDto';
+import { CreateItemDto } from '../types/createItemDto';
 
 @ApiTags('items')
 @ApiBearerAuth()

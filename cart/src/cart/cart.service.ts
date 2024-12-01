@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Cart, Prisma } from '@prisma/client';
-import { ItemService } from 'src/item/item.service';
-import { PrismaService } from 'src/prisma.service';
-import { PayCart } from 'src/types/payCart';
-import { PayItem } from 'src/types/payItem';
+import { ItemService } from '../item/item.service';
+import { PrismaService } from '../prisma.service';
+import { PayCart } from '../types/payCart';
+import { PayItem } from '../types/payItem';
 
 @Injectable()
 export class CartService {
   constructor(
     private prisma: PrismaService,
     private readonly itemService: ItemService,
-  ) {}
+  ) { }
 
   getAllCarts(): Promise<Cart[]> {
     return this.prisma.cart.findMany();
