@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma.service';
 describe('ItemService', () => {
   let service: ItemService;
 
-  let mockPrismaService = {
+  const mockPrismaService = {
     item: {
       findUnique: jest.fn(),
       findMany: jest.fn(),
@@ -18,7 +18,10 @@ describe('ItemService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ItemService, PrismaService],
-    }).overrideProvider(PrismaService).useValue(mockPrismaService).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue(mockPrismaService)
+      .compile();
 
     service = module.get<ItemService>(ItemService);
   });
@@ -33,7 +36,9 @@ describe('ItemService', () => {
 
     const result = await service.getItem({ id: 1 });
 
-    expect(mockPrismaService.item.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(mockPrismaService.item.findUnique).toHaveBeenCalledWith({
+      where: { id: 1 },
+    });
     expect(result).toEqual(mockItem);
   });
 
@@ -59,7 +64,9 @@ describe('ItemService', () => {
 
     const result = await service.createItem(mockData);
 
-    expect(mockPrismaService.item.create).toHaveBeenCalledWith({ data: mockData });
+    expect(mockPrismaService.item.create).toHaveBeenCalledWith({
+      data: mockData,
+    });
     expect(result).toEqual(mockItem);
   });
 
@@ -91,5 +98,4 @@ describe('ItemService', () => {
     });
     expect(result).toEqual(mockItem);
   });
-
 });
