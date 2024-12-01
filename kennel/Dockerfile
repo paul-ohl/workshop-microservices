@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:22.11.0-slim
 
 WORKDIR /kennel
 
@@ -8,10 +8,9 @@ RUN npm install
 
 COPY ./kennel .
 
-RUN npx prisma generate
-
-RUN npm run build
+RUN npx prisma generate \
+	&& npm run build
 
 EXPOSE 3000-3100
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start:prod"]

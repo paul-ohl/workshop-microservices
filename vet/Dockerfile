@@ -1,4 +1,4 @@
-FROM node:22.11.0-slim AS base
+FROM node:22.11.0-slim
 
 WORKDIR /vet-service
 
@@ -10,15 +10,15 @@ COPY ./ .
 
 # Install additional tools: OpenSSL, PostgreSQL client, etc.
 RUN apt-get update && apt-get install -y \
-bash \
-locales \
-openssl \
-libssl-dev \
-postgresql-client \
-&& rm -rf /var/lib/apt/lists/*
+	bash \
+	locales \
+	openssl \
+	libssl-dev \
+	postgresql-client \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN npx prisma generate 
-RUN npm run build
+RUN npx prisma generate \
+	&& npm run build
 
 EXPOSE 3000-3100
 

@@ -1,6 +1,11 @@
 #!/bin/sh
 
-sleep 10 # wait for database to start, this is a temporary solution
+# Attendre que la base de données soit prête
+until pg_isready -h "${PG_HOST}" -p 5432 -U "${PG_USER}"; do
+    echo "En attente de la base de données..."
+    sleep 2
+done
+
 
 npx prisma migrate deploy
 
