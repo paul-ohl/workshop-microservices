@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { PayCartDto } from './dtos/cart.dto';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard } from './auth/auth.guard';
 
 @Controller()
 @ApiBearerAuth()
@@ -19,7 +18,6 @@ export class AppController {
   @ApiResponse({ status: 200, description: 'Payment successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
-  @UseGuards(AuthGuard)
   async payCart(@Body() cart: PayCartDto): Promise<string> {
     return await this.appService.payCart(cart);
   }

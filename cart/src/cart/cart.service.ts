@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Cart, Prisma } from '@prisma/client';
-import { ItemService } from 'src/item/item.service';
-import { PrismaService } from 'src/prisma.service';
-import { PayCart } from 'src/types/payCart';
-import { PayItem } from 'src/types/payItem';
+import { ItemService } from '../item/item.service';
+import { PrismaService } from '../prisma.service';
+import { PayCart } from '../types/payCart';
+import { PayItem } from '../types/payItem';
 
 @Injectable()
 export class CartService {
@@ -59,7 +59,7 @@ export class CartService {
     });
   }
 
-  async sellCart(cartId: number, authorizationHeader: string): Promise<string> {
+  async sellCart(cartId: number): Promise<string> {
     const cartItems = await this.itemService.getItemsFromCart({ id: +cartId });
     const cartItemsWithNames: PayItem[] = await Promise.all(
       cartItems.map(async (item) => {
@@ -85,7 +85,6 @@ export class CartService {
       body: JSON.stringify(finalCart),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: authorizationHeader,
       },
     });
 
