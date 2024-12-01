@@ -11,7 +11,6 @@ import {
 import { VetService } from './vet.service';
 import { createVetDto } from './dto/createVet.dto';
 import { updateVetDto } from './dto/updateVet.dto';
-import { AuthGuard } from './auth/auth.guard';
 import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('vets')
@@ -19,7 +18,6 @@ export class VetController {
   constructor(private readonly vetService: VetService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'Get all vets.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
@@ -28,7 +26,6 @@ export class VetController {
   }
 
   @Get('/:id')
-  @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'Get one vet.' })
   @ApiResponse({ status: 400, description: 'Wrong input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
@@ -38,7 +35,6 @@ export class VetController {
   }
 
   @Get('/categories/:categories')
-  @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'Get vets by categories.' })
   @ApiResponse({ status: 400, description: 'Wrong input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
@@ -48,7 +44,6 @@ export class VetController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
   @ApiResponse({ status: 200, description: 'Vet created.' })
   @ApiResponse({ status: 400, description: 'Wrong input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
@@ -62,7 +57,6 @@ export class VetController {
   @ApiResponse({ status: 400, description: 'Wrong input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   async updateVet(@Param('id') id: string, @Body() updateVetDto: updateVetDto) {
     return this.vetService.updateVet(id, updateVetDto);
   }
@@ -71,7 +65,6 @@ export class VetController {
   @ApiResponse({ status: 200, description: 'Vet deleted.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   async deleteVet(@Param('id') id: string) {
     return this.vetService.deleteVet(id);
   }

@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {
@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Jour {
+enum Day {
   LUNDI
   MARDI
   MERCREDI
@@ -29,7 +29,7 @@ model TimeSlot {
 
 model Disponibility {
   id       String     @id @default(uuid())
-  jour     Jour[]
+  day      Day[]
   vetId    String
   vet      Vet        @relation(fields: [vetId], references: [id])
   timeSlot TimeSlot[]

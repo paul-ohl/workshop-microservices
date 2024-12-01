@@ -1,14 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-# Wait for PostgreSQL to be ready
-sleep 10
+# Attendre que la base de données soit prête
+until pg_isready -h "${PG_HOST}" -p 5432 -U "${PG_USER}"; do
+    echo "En attente de la base de données..."
+    sleep 2
+done
 
-
-# Run Prisma migrations
+# Exécute les migrations Prisma
 npx prisma migrate deploy
 
-# Push the database schema
 npx prisma db push
 
-# Start the application
+# Lance l'application
 npm run dev

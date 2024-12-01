@@ -4,15 +4,20 @@ services:
       context: ./vet
       dockerfile: ./Dockerfile
     environment:
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PORT=3001
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - postgres
+    networks:
+      - microservices
 
   payment:
     build:
-      context: ./payment-service
+      context: ./payment
       dockerfile: Dockerfile
     environment:
       - JWT_SECRET=${JWT_SECRET}
@@ -20,10 +25,12 @@ services:
       - PORT=3002
     ports:
       - "3002:3002"
+    networks:
+      - microservices
 
   cart:
     build:
-      context: ./cart-service
+      context: ./cart
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
@@ -31,10 +38,14 @@ services:
       - PAYMENT_SERVICE_HOST=payment:3002
       - THANK_YOU_URL=${THANK_YOU_URL}
       - CANCEL_URL=${CANCEL_URL}
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
     ports:
       - "3003:3003"
     depends_on:
       - postgres
+    networks:
+      - microservices
 
   auth:
     build:
@@ -45,11 +56,15 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION}
       - PORT=3004
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
     ports:
       - "3004:3004"
     depends_on:
       - postgres
     restart: always
+    networks:
+      - microservices
 
   token:
     build:
@@ -60,6 +75,16 @@ services:
     ports:
       - "3005:3005"
     restart: always
+    networks:
+      - microservices
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - microservices
 
   postgres:
     image: postgres:13.16-alpine
@@ -69,14 +94,12 @@ services:
       - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
-      - postgres_data:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    networks:
+      - microservices
 
 volumes:
   postgres_data:
     driver: local
+networks:
+  microservices:
+    driver: bridge

@@ -1,6 +1,6 @@
-FROM node:22.11.0-slim AS base
+FROM node:22.11.0-slim
 
-WORKDIR /vet
+WORKDIR /vet-service
 
 COPY ./package*.json ./
 
@@ -8,25 +8,22 @@ RUN npm install
 
 COPY ./ .
 
-FROM base AS build
-
-RUN npx prisma generate
-
-RUN npm run build
-
 # Install additional tools: OpenSSL, PostgreSQL client, etc.
 RUN apt-get update && apt-get install -y \
-    bash \
-    locales \
-    openssl \
-    libssl-dev \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+	bash \
+	locales \
+	openssl \
+	libssl-dev \
+	postgresql-client \
+	&& rm -rf /var/lib/apt/lists/*
 
-# Add and set up the entrypoint script
-COPY entrypoint.sh /vet/entrypoint.sh
-RUN chmod +x /vet/entrypoint.sh
+RUN npx prisma generate \
+	&& npm run build
 
 EXPOSE 3000-3100
 
-CMD [ "/vet/entrypoint.sh" ]
+# Add and set up the entrypoint script
+COPY entrypoint.sh /vet-service/entrypoint.sh
+RUN chmod +x /vet-service/entrypoint.sh
+
+CMD ["/vet-service/entrypoint.sh"]

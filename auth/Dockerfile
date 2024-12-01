@@ -1,4 +1,4 @@
-FROM node:22.11.0-slim AS base
+FROM node:22.11.0-slim
 
 WORKDIR /app
 
@@ -7,10 +7,6 @@ COPY ./package*.json ./
 RUN npm install
 
 COPY ./ .
-
-RUN npx prisma generate
-
-RUN npm run build
 
 # Install additional tools: OpenSSL, PostgreSQL client, etc.
 RUN apt-get update && apt-get install -y \
@@ -21,10 +17,13 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npx prisma generate \
+    && npm run build
+
 # Add and set up the entrypoint script
-COPY entrypoint.sh /vet/entrypoint.sh
-RUN chmod +x /vet/entrypoint.sh
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 3000-3100
 
-CMD [ "/vet/entrypoint.sh" ]
+CMD [ "/app/entrypoint.sh" ]

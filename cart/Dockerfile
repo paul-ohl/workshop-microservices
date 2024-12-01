@@ -1,25 +1,25 @@
-FROM node:22-slim AS base
+FROM node:22.11.0-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 COPY . /app
 WORKDIR /app
-RUN apt update && apt install -y openssl
 
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# Install binary dependencies: OpenSSL, PostgreSQL client, etc.
+RUN apt-get update && apt-get install -y \
+	bash \
+	locales \
+	openssl \
+	libssl-dev \
+	postgresql-client \
+	&& rm -rf /var/lib/apt/lists/*
 
-FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN npx prisma generate
-RUN pnpm run build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile \
+	&& npx prisma generate \
+	&& pnpm run build
 
-FROM base
-
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
-RUN npx prisma generate
 COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 3000-3100
 
