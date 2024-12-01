@@ -16,14 +16,17 @@ describe('AppService', () => {
             };
           }),
         },
-      }
-    }
+      },
+    },
   };
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [AppService, StripeService],
-    }).overrideProvider(StripeService).useValue(mockStripeService).compile();
+    })
+      .overrideProvider(StripeService)
+      .useValue(mockStripeService)
+      .compile();
 
     service = app.get<AppService>(AppService);
   });
@@ -39,10 +42,14 @@ describe('AppService', () => {
   it('should call payCart function', async () => {
     const payCartDto = { id: 1, items: [], ownerId: 'abcd' };
     const res = await service.payCart(payCartDto);
-    expect(res).toBe(JSON.stringify({
-      sessionId: '1234',
-      sessionUrl: 'http://example.com',
-    }));
-    expect(mockStripeService.stripeInstance.checkout.sessions.create).toHaveBeenCalled();
+    expect(res).toBe(
+      JSON.stringify({
+        sessionId: '1234',
+        sessionUrl: 'http://example.com',
+      }),
+    );
+    expect(
+      mockStripeService.stripeInstance.checkout.sessions.create,
+    ).toHaveBeenCalled();
   });
 });

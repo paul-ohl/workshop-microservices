@@ -21,7 +21,10 @@ describe('AppController', () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
-    }).overrideProvider(AppService).useValue(mockAppService).compile();
+    })
+      .overrideProvider(AppService)
+      .useValue(mockAppService)
+      .compile();
 
     appController = app.get<AppController>(AppController);
   });
