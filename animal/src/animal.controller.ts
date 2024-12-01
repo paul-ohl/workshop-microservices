@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Get, Param, Patch, Delete, Logger, UseGuards } from '@nestjs/common';
 import { AnimalService } from './services/animal.service';
 import { CreateAnimalDto } from './dto/create-animal.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from './auth/auth.guard';
 
@@ -16,7 +17,6 @@ export class AnimalController {
 
     // Créer un nouvel animal
     @Post()
-    // @UseGuards(AuthGuard)
     async createAnimal(@Body() createAnimalDto: CreateAnimalDto) {
         this.logger.debug(`Creating animal with data: ${JSON.stringify(createAnimalDto)}`);
         const result = await this.animalService.createAnimal(createAnimalDto);
@@ -26,13 +26,13 @@ export class AnimalController {
 
     // Créer une nouvelle catégorie
     @Post('/category')
-    // @UseGuards(AuthGuard)
-    async createCategory(@Body('name') name: string) {
-        this.logger.debug(`Creating category with name: ${name}`);
-        const result = await this.animalService.createCategory(name);
+    async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+        this.logger.debug(`Creating category with name: ${createCategoryDto.name}`);
+        const result = await this.animalService.createCategory(createCategoryDto.name);
         this.logger.debug(`Category created: ${JSON.stringify(result)}`);
         return result;
     }
+
 
     // Obtenir tous les animaux
     @Get()
