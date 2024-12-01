@@ -1,7 +1,7 @@
 services:
-  vet-service:
+  vet:
     build:
-      context: ./vet-service
+      context: ./vet
       dockerfile: ./Dockerfile
     environment:
       - PG_HOST=${PG_HOST}
@@ -17,7 +17,7 @@ services:
 
   payment:
     build:
-      context: ./payment-service
+      context: ./payment
       dockerfile: Dockerfile
     environment:
       - JWT_SECRET=${JWT_SECRET}
@@ -30,7 +30,7 @@ services:
 
   cart:
     build:
-      context: ./cart-service
+      context: ./cart
       dockerfile: docker/node/Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
