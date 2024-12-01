@@ -1,10 +1,32 @@
-import { Controller, Get, Req, Res, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+  @Post('generate')
+  async generateToken(@Body() payload: any) {
+    try {
+      const token = this.authService.generateToken(payload.payload); // Remarquez payload.payload
+      return { token };
+    } catch (error) {
+      throw new HttpException(
+        'Failed to generate token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   @Get('verify-token')
   async verifyToken(@Req() req: Request, @Res() res: Response): Promise<void> {

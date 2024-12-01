@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+
 export interface AuthResult {
   message?: string;
   status?: number;
@@ -19,6 +20,10 @@ export class AuthService {
   constructor() {
     // Charger la clé publique directement depuis l'environnement
     this.publicKey = process.env.JWT_SECRET as string;
+  }
+  generateToken(payload: any): string {
+    const secret = process.env.JWT_SECRET || 'defaultSecretKey';
+    return jwt.sign(payload, secret, { expiresIn: '1h' });
   }
 
   async verifyTokenService(req: Request): Promise<AuthResult> {
