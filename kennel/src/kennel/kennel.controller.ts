@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { KennelService } from './kennel.service';
 import { Kennel as KennelModel } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('product')
 @Controller('/kennel')
 export class KennelController {
   constructor(private readonly kennelService: KennelService) {}
