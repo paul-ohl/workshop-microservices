@@ -6,12 +6,10 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { Item as ItemModel } from '@prisma/client';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateItemDto } from 'src/types/createItemDto';
 
 @ApiTags('items')
@@ -27,7 +25,6 @@ export class ItemController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   getItems(@Param('cartId') cartId: number): Promise<ItemModel[]> {
     return this.itemService.getItemsFromCart({ id: +cartId });
   }
@@ -37,7 +34,6 @@ export class ItemController {
   @ApiResponse({ status: 400, description: 'Bad input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   createItem(
     @Param('cartId') cartId: number,
     @Body() itemData: CreateItemDto,
@@ -64,7 +60,6 @@ export class ItemController {
   @ApiResponse({ status: 400, description: 'Bad input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   updateItem(
     @Param('itemId') itemId: number,
     @Body() itemData: { price?: number; quantity?: number },
@@ -82,7 +77,6 @@ export class ItemController {
   @ApiResponse({ status: 201, description: 'Deleted the resource.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  @UseGuards(AuthGuard)
   deleteItem(@Param('itemId') itemId: number): Promise<ItemModel> {
     return this.itemService.deleteItem({ id: itemId });
   }
