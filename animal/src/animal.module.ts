@@ -6,13 +6,13 @@ import { Animal, AnimalSchema } from './schema/animal.schema';
 import { Category, CategorySchema } from './schema/category.schema';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: Animal.name, schema: AnimalSchema },
-            { name: Category.name, schema: CategorySchema },
-        ]),
-    ],
-    controllers: [AnimalController],
-    providers: [AnimalService],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Animal.name, schema: AnimalSchema },
+      { name: Category.name, schema: CategorySchema },
+    ]),
+  ],
+  controllers: [AnimalController],
+  providers: [AnimalService],
 })
-export class AnimalModule { }
+export class AnimalModule {}

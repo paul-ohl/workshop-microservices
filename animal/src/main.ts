@@ -18,7 +18,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT || 3000);
   console.log('Animals microservice is running on http://localhost:3001');
 }
 bootstrap();

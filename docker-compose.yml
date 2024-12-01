@@ -87,14 +87,6 @@ services:
     networks:
       - microservices
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - microservices
-
   kennel:
     build:
       context: ./kennel
@@ -110,6 +102,7 @@ services:
   animal:
     build:
       context: ./animal
+      dockerfile: ./Dockerfile
     ports:
       - '3008:3008'
     environment:
@@ -128,6 +121,14 @@ services:
       - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
+    networks:
+      - microservices
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
     networks:
       - microservices
 

@@ -15,18 +15,23 @@ import { firstValueFrom } from 'rxjs';
 
 @Controller('animal')
 export class AppController {
-  private readonly animalServiceUrl = 'http://animal:3001'; // URL du service animal
+  private readonly animalServiceUrl = 'http://animal:3008'; // URL du service animal
 
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   // Obtenir tous les animaux
   @Get()
   async getAllAnimals() {
     try {
-      const response = await firstValueFrom(this.httpService.get(`${this.animalServiceUrl}/animals`));
+      const response = await firstValueFrom(
+        this.httpService.get(`${this.animalServiceUrl}/animals`),
+      );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la récupération des animaux :', error.message);
+      console.error(
+        'Erreur lors de la récupération des animaux :',
+        error.message,
+      );
       throw new HttpException(
         error.response?.data || 'Erreur lors de la récupération des animaux',
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -43,9 +48,12 @@ export class AppController {
       );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'animal :', error.message);
+      console.error(
+        "Erreur lors de la récupération de l'animal :",
+        error.message,
+      );
       throw new HttpException(
-        error.response?.data || 'Erreur lors de la récupération de l\'animal',
+        error.response?.data || "Erreur lors de la récupération de l'animal",
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -56,13 +64,16 @@ export class AppController {
   async createAnimal(@Body() createAnimalDto: CreateAnimalDto) {
     try {
       const response = await firstValueFrom(
-        this.httpService.post(`${this.animalServiceUrl}/animals`, createAnimalDto),
+        this.httpService.post(
+          `${this.animalServiceUrl}/animals`,
+          createAnimalDto,
+        ),
       );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la création de l\'animal :', error.message);
+      console.error("Erreur lors de la création de l'animal :", error.message);
       throw new HttpException(
-        error.response?.data || 'Erreur lors de la création de l\'animal',
+        error.response?.data || "Erreur lors de la création de l'animal",
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -77,11 +88,16 @@ export class AppController {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.post(`${this.animalServiceUrl}/animals/category`, { name }),
+        this.httpService.post(`${this.animalServiceUrl}/animals/category`, {
+          name,
+        }),
       );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la création de la catégorie :', error.message);
+      console.error(
+        'Erreur lors de la création de la catégorie :',
+        error.message,
+      );
       throw new HttpException(
         error.response?.data || 'Erreur lors de la création de la catégorie',
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -89,20 +105,27 @@ export class AppController {
     }
   }
 
-
-
   // Mettre à jour un animal
   @Patch('/:id')
-  async updateAnimal(@Param('id') id: string, @Body() updateData: Partial<CreateAnimalDto>) {
+  async updateAnimal(
+    @Param('id') id: string,
+    @Body() updateData: Partial<CreateAnimalDto>,
+  ) {
     try {
       const response = await firstValueFrom(
-        this.httpService.patch(`${this.animalServiceUrl}/animals/${id}`, updateData),
+        this.httpService.patch(
+          `${this.animalServiceUrl}/animals/${id}`,
+          updateData,
+        ),
       );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la mise à jour de l\'animal :', error.message);
+      console.error(
+        "Erreur lors de la mise à jour de l'animal :",
+        error.message,
+      );
       throw new HttpException(
-        error.response?.data || 'Erreur lors de la mise à jour de l\'animal',
+        error.response?.data || "Erreur lors de la mise à jour de l'animal",
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -117,9 +140,12 @@ export class AppController {
       );
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'animal :', error.message);
+      console.error(
+        "Erreur lors de la suppression de l'animal :",
+        error.message,
+      );
       throw new HttpException(
-        error.response?.data || 'Erreur lors de la suppression de l\'animal',
+        error.response?.data || "Erreur lors de la suppression de l'animal",
         error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

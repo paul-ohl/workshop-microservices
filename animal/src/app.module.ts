@@ -16,4 +16,4 @@ import { AnimalModule } from './animal.module';
     AnimalModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
