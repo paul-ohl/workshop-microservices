@@ -1,4 +1,13 @@
 services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: ./Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - microservices
+
   vet:
     build:
       context: ./vet
@@ -98,6 +107,19 @@ services:
     depends_on:
       - postgres
 
+  animal:
+    build:
+      context: ./animal
+    ports:
+      - '3008:3008'
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/Animals
+      - PORT=3008
+    depends_on:
+      - mongo
+    networks:
+      - microservices
+
   postgres:
     image: postgres:13.16-alpine
     environment:
@@ -109,8 +131,17 @@ services:
     networks:
       - microservices
 
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - microservices
+
 volumes:
   postgres_data:
+    driver: local
+  mongo_data:
     driver: local
 networks:
   microservices:
