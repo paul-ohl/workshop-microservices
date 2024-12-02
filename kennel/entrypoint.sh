@@ -21,4 +21,4 @@ export DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?s
 
 npx prisma migrate deploy
 
-node dist/main.js
+npm run start:prod

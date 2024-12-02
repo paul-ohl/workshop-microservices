@@ -3,6 +3,12 @@ services:
     build:
       context: ./api-gateway
       dockerfile: ./Dockerfile
+    environment:
+      - VET_SERVICE_URL=vet:3001
+      - CART_SERVICE_URL=cart:3003
+      - AUTH_SERVICE_URL=auth:3004
+      - KENNEL_SERVICE_URL=kennel:3006
+      - ANIMAL_SERVICE_URL=animal:3007
     ports:
       - '3000:3000'
     networks:
@@ -15,10 +21,11 @@ services:
     environment:
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${VET_DB_NAME}
       - PORT=3001
     ports:
-      - "3001:3001"
+      - '3001:3001'
     depends_on:
       - postgres
     networks:
@@ -33,7 +40,7 @@ services:
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - PORT=3002
     ports:
-      - "3002:3002"
+      - '3002:3002'
     networks:
       - microservices
 
@@ -42,15 +49,16 @@ services:
       context: ./cart
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3003
       - PAYMENT_SERVICE_HOST=payment:3002
       - THANK_YOU_URL=${THANK_YOU_URL}
       - CANCEL_URL=${CANCEL_URL}
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${CART_DB_NAME}
     ports:
-      - "3003:3003"
+      - '3003:3003'
     depends_on:
       - postgres
     networks:
@@ -61,14 +69,15 @@ services:
       context: ./auth
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION}
       - PORT=3004
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${AUTH_DB_NAME}
     ports:
-      - "3004:3004"
+      - '3004:3004'
     depends_on:
       - postgres
     restart: always
@@ -82,7 +91,7 @@ services:
     environment:
       - PORT=3005
     ports:
-      - "3005:3005"
+      - '3005:3005'
     restart: always
     networks:
       - microservices
@@ -92,22 +101,27 @@ services:
       context: ./kennel
       dockerfile: ./Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
-      - PORT=3007
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${KENNEL_DB_NAME}
+      - PORT=3006
     ports:
-      - "3007:3007"
+      - '3006:3006'
     depends_on:
       - postgres
+    networks:
+      - microservices
 
   animal:
     build:
       context: ./animal
       dockerfile: ./Dockerfile
     ports:
-      - '3008:3008'
+      - '3007:3007'
     environment:
       - DATABASE_URL=mongodb://mongo:27017/Animals
-      - PORT=3008
+      - PORT=3007
     depends_on:
       - mongo
     networks:
@@ -118,7 +132,6 @@ services:
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-      - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
     networks:
