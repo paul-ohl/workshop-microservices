@@ -3,6 +3,9 @@ services:
     build:
       context: ./api-gateway
       dockerfile: ./Dockerfile
+    environment:
+      - CART_SERVICE_URL=cart:3003
+      - ANIMAL_SERVICE_URL=animal:3007
     ports:
       - '3000:3000'
     networks:
@@ -15,7 +18,8 @@ services:
     environment:
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${VET_DB_NAME}
       - PORT=3001
     ports:
       - '3001:3001'
@@ -42,13 +46,14 @@ services:
       context: ./cart
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3003
       - PAYMENT_SERVICE_HOST=payment:3002
       - THANK_YOU_URL=${THANK_YOU_URL}
       - CANCEL_URL=${CANCEL_URL}
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${CART_DB_NAME}
     ports:
       - '3003:3003'
     depends_on:
@@ -61,12 +66,13 @@ services:
       context: ./auth
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION}
       - PORT=3004
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${AUTH_DB_NAME}
     ports:
       - '3004:3004'
     depends_on:
@@ -94,7 +100,8 @@ services:
     environment:
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
-      - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${KENNEL_DB_NAME}
       - PORT=3006
     ports:
       - '3006:3006'
@@ -103,26 +110,25 @@ services:
     networks:
       - microservices
 
-  animal:
-    build:
-      context: ./animal
-      dockerfile: ./Dockerfile
-    ports:
-      - '3007:3007'
-    environment:
-      - DATABASE_URL=mongodb://mongo:27017/Animals
-      - PORT=3007
-    depends_on:
-      - mongo
-    networks:
-      - microservices
+  # animal:
+  #   build:
+  #     context: ./animal
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - '3007:3007'
+  #   environment:
+  #     - DATABASE_URL=mongodb://mongo:27017/Animals
+  #     - PORT=3007
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - microservices
 
   postgres:
     image: postgres:13.16-alpine
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-      - POSTGRES_DB=${PG_NAME}
     volumes:
       - postgres_data:/data/db
     networks:
@@ -136,12 +142,12 @@ services:
     networks:
       - microservices
 
-  mongo:
-    image: mongo:latest
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - microservices
+  # mongo:
+  #   image: mongo:latest
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - microservices
 
 volumes:
   postgres_data:
