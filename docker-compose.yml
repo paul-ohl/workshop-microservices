@@ -92,12 +92,16 @@ services:
       context: ./kennel
       dockerfile: ./Dockerfile
     environment:
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3006
     ports:
       - '3006:3006'
     depends_on:
       - postgres
+    networks:
+      - microservices
 
   animal:
     build:
