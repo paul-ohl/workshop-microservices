@@ -18,7 +18,7 @@ services:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
       - PORT=3001
     ports:
-      - "3001:3001"
+      - '3001:3001'
     depends_on:
       - postgres
     networks:
@@ -33,7 +33,7 @@ services:
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - PORT=3002
     ports:
-      - "3002:3002"
+      - '3002:3002'
     networks:
       - microservices
 
@@ -50,7 +50,7 @@ services:
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
     ports:
-      - "3003:3003"
+      - '3003:3003'
     depends_on:
       - postgres
     networks:
@@ -68,7 +68,7 @@ services:
       - PG_HOST=${PG_HOST}
       - PG_USER=${PG_USER}
     ports:
-      - "3004:3004"
+      - '3004:3004'
     depends_on:
       - postgres
     restart: always
@@ -82,7 +82,7 @@ services:
     environment:
       - PORT=3005
     ports:
-      - "3005:3005"
+      - '3005:3005'
     restart: always
     networks:
       - microservices
@@ -93,9 +93,9 @@ services:
       dockerfile: ./Dockerfile
     environment:
       - DATABASE_URL=postgres://${PG_USER}:${PG_PASSWORD}@${PG_HOST}/${PG_NAME}?schema=public
-      - PORT=3007
+      - PORT=3006
     ports:
-      - "3007:3007"
+      - '3006:3006'
     depends_on:
       - postgres
 
@@ -104,10 +104,10 @@ services:
       context: ./animal
       dockerfile: ./Dockerfile
     ports:
-      - '3008:3008'
+      - '3007:3007'
     environment:
       - DATABASE_URL=mongodb://mongo:27017/Animals
-      - PORT=3008
+      - PORT=3007
     depends_on:
       - mongo
     networks:
