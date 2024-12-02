@@ -110,19 +110,19 @@ services:
     networks:
       - microservices
 
-  # animal:
-  #   build:
-  #     context: ./animal
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - '3007:3007'
-  #   environment:
-  #     - DATABASE_URL=mongodb://mongo:27017/Animals
-  #     - PORT=3007
-  #   depends_on:
-  #     - mongo
-  #   networks:
-  #     - microservices
+  animal:
+    build:
+      context: ./animal
+      dockerfile: ./Dockerfile
+    ports:
+      - '3007:3007'
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/Animals
+      - PORT=3007
+    depends_on:
+      - mongo
+    networks:
+      - microservices
 
   postgres:
     image: postgres:13.16-alpine
@@ -142,12 +142,12 @@ services:
     networks:
       - microservices
 
-  # mongo:
-  #   image: mongo:latest
-  #   volumes:
-  #     - mongo_data:/data/db
-  #   networks:
-  #     - microservices
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - microservices
 
 volumes:
   postgres_data:
