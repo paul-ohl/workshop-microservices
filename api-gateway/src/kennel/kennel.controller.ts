@@ -1,10 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { FetcherService } from 'src/fetcher/fetcher.service';
 
 @Controller('kennel')
 export class KennelController {
   private readonly kennelServiceUrl = process.env.KENNEL_SERVICE_URL;
-  constructor(private readonly fetcher: FetcherService) { }
+  constructor(private readonly fetcher: FetcherService) {}
 
   @Get()
   async getAllKennels() {
@@ -29,7 +37,10 @@ export class KennelController {
     @Param('id') id: string,
     @Body('kennelData') kennelData: any,
   ): Promise<string> {
-    return await this.fetcher.patch(`${this.kennelServiceUrl}/update/${id}`, kennelData);
+    return await this.fetcher.patch(
+      `${this.kennelServiceUrl}/update/${id}`,
+      kennelData,
+    );
   }
 
   @Delete('delete/:id')
@@ -42,7 +53,10 @@ export class KennelController {
     @Param('id') id: string,
     @Body('kennelData') kennelData: any,
   ): Promise<string> {
-    return await this.fetcher.patch(`${this.kennelServiceUrl}/addProduct/${id}`, kennelData);
+    return await this.fetcher.patch(
+      `${this.kennelServiceUrl}/addProduct/${id}`,
+      kennelData,
+    );
   }
 
   @Patch('addVet/:id')
@@ -50,7 +64,10 @@ export class KennelController {
     @Param('id') id: string,
     @Body('kennelData') kennelData: any,
   ): Promise<string> {
-    return await this.fetcher.patch(`${this.kennelServiceUrl}/addVet/${id}`, kennelData);
+    return await this.fetcher.patch(
+      `${this.kennelServiceUrl}/addVet/${id}`,
+      kennelData,
+    );
   }
 
   @Patch('addAnimal/:id')
@@ -58,6 +75,9 @@ export class KennelController {
     @Param('id') id: string,
     @Body('kennelData') kennelData: any,
   ): Promise<string> {
-    return await this.fetcher.patch(`${this.kennelServiceUrl}/addAnimal/${id}`, kennelData);
+    return await this.fetcher.patch(
+      `${this.kennelServiceUrl}/addAnimal/${id}`,
+      kennelData,
+    );
   }
 }
