@@ -8,6 +8,7 @@ import { ItemController } from './cart/item.controller';
 import { UserController } from './user/user.controller';
 import { KennelController } from './kennel/kennel.controller';
 import { ProductController } from './kennel/product.controller';
+import { VetController } from './vet/vet.controller';
 
 @Module({
   imports: [HttpModule],
@@ -18,6 +19,7 @@ import { ProductController } from './kennel/product.controller';
     UserController,
     KennelController,
     ProductController,
+    VetController,
   ],
   providers: [AppService, FetcherService],
 })
