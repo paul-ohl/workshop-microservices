@@ -5,7 +5,7 @@ import { FetcherService } from 'src/fetcher/fetcher.service';
 @Controller('cart')
 export class CartController {
   private readonly cartServiceUrl = process.env.CART_SERVICE_URL;
-  constructor(private readonly fetcher: FetcherService) { }
+  constructor(private readonly fetcher: FetcherService) {}
 
   @Get('carts')
   @ApiResponse({ status: 200, description: 'Retrieved all the carts.' })

@@ -1,11 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { FetcherService } from 'src/fetcher/fetcher.service';
 
 @Controller('vet')
 export class VetController {
   private readonly cartServiceUrl = process.env.CART_SERVICE_URL;
-  constructor(private readonly fetcher: FetcherService) { }
+  constructor(private readonly fetcher: FetcherService) {}
 
   @Get()
   @ApiResponse({ status: 200, description: 'Get all vets.' })
@@ -30,7 +38,9 @@ export class VetController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
   async findVetByCategories(@Param('categories') categories: string) {
-    return await this.fetcher.get(`${this.cartServiceUrl}/vet/categories/${categories}`);
+    return await this.fetcher.get(
+      `${this.cartServiceUrl}/vet/categories/${categories}`,
+    );
   }
 
   @Post()
@@ -47,11 +57,11 @@ export class VetController {
   @ApiResponse({ status: 400, description: 'Wrong input.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Resource does not exist.' })
-  async updateVet(
-    @Param('id') id: string,
-    @Body() updateVetBody: any,
-  ) {
-    return await this.fetcher.patch(`${this.cartServiceUrl}/vet/${id}`, updateVetBody);
+  async updateVet(@Param('id') id: string, @Body() updateVetBody: any) {
+    return await this.fetcher.patch(
+      `${this.cartServiceUrl}/vet/${id}`,
+      updateVetBody,
+    );
   }
 
   @Delete('/:id')
