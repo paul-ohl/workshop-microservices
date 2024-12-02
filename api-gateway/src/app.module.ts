@@ -5,10 +5,12 @@ import { HttpModule } from '@nestjs/axios';
 import { CartController } from './cart/cart.controller';
 import { FetcherService } from './fetcher/fetcher.service';
 import { ItemController } from './cart/item.controller';
+import { UserController } from './user/user.controller';
+import { KennelController } from './kennel/kennel.controller';
 
 @Module({
   imports: [HttpModule],
-  controllers: [AppController, CartController, ItemController],
+  controllers: [AppController, CartController, ItemController, UserController, KennelController],
   providers: [AppService, FetcherService],
 })
 export class AppModule {}

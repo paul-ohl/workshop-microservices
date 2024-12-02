@@ -6,7 +6,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 const logger = new Logger('Bootstrap');
 
 function checkEnvVars() {
-  const requiredEnvVars = ['CART_SERVICE_URL', 'ANIMAL_SERVICE_URL'];
+  const requiredEnvVars = [
+    "VET_SERVICE_URL",
+    "CART_SERVICE_URL",
+    "AUTH_SERVICE_URL",
+    "KENNEL_SERVICE_URL",
+    "ANIMAL_SERVICE_URL",
+  ];
   let shouldExit = false;
   requiredEnvVars.forEach((envVar) => {
     if (!process.env[envVar]) {

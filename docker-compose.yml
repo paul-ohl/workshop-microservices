@@ -4,7 +4,10 @@ services:
       context: ./api-gateway
       dockerfile: ./Dockerfile
     environment:
+      - VET_SERVICE_URL=vet:3001
       - CART_SERVICE_URL=cart:3003
+      - AUTH_SERVICE_URL=auth:3004
+      - KENNEL_SERVICE_URL=kennel:3006
       - ANIMAL_SERVICE_URL=animal:3007
     ports:
       - '3000:3000'
