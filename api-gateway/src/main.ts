@@ -5,7 +5,22 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const logger = new Logger('Bootstrap');
 
+function checkEnvVars() {
+  const requiredEnvVars = ['CART_SERVICE_URL', 'ANIMAL_SERVICE_URL'];
+  let shouldExit = false;
+  requiredEnvVars.forEach((envVar) => {
+    if (!process.env[envVar]) {
+      logger.error(`Environment variable ${envVar} is missing`);
+      shouldExit = true;
+    }
+  });
+  if (shouldExit) {
+    process.exit(1);
+  }
+}
+
 async function bootstrap() {
+  checkEnvVars();
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
