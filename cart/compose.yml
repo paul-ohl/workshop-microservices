@@ -1,0 +1,45 @@
+services:
+  cart:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3003
+      - PAYMENT_SERVICE_HOST=example.com
+      - THANK_YOU_URL=${THANK_YOU_URL}
+      - CANCEL_URL=${CANCEL_URL}
+      - PG_HOST=${PG_HOST}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${CART_DB_NAME}
+    ports:
+      - '3003:3003'
+    depends_on:
+      - postgres
+    networks:
+      - microservices
+
+  postgres:
+    image: postgres:13.16-alpine
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    volumes:
+      - postgres_data:/data/db
+    networks:
+      - microservices
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - microservices
+
+volumes:
+  postgres_data:
+    driver: local
+networks:
+  microservices:
+    driver: bridge
