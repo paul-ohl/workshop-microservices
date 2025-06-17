@@ -1,9 +1,6 @@
 FROM node:22.11.0-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-COPY . /app
-WORKDIR /app
 
 # Install binary dependencies: OpenSSL, PostgreSQL client, etc.
 RUN apt-get update && apt-get install -y \
@@ -15,6 +12,10 @@ RUN apt-get update && apt-get install -y \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g corepack@latest
+
+RUN corepack enable
+COPY . /app
+WORKDIR /app
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile \
 	&& npx prisma generate \

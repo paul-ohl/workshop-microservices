@@ -44,10 +44,29 @@ services:
       - 9090:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - microservices
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3004:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - microservices
 
 volumes:
   postgres_data:
     driver: local
+  grafana-data:
+    driver: local
+  prometheus-data:
+    driver: local
 networks:
   microservices:
     driver: bridge
+
